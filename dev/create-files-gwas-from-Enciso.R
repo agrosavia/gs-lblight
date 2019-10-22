@@ -1,10 +1,12 @@
 #!/usr/bin/Rscript
 
+# Create phenotypes by year processing the original phenotype
+
 
 args = commandArgs(trailingOnly = TRUE)
 options (width=300)
 
-args = c ("phenotype.tbl", "genotype.tbl", "genome.gff3")
+args = c ("phenotype-potato-Enciso-lateBlight.tbl", "genotype-potato-Enciso.tbl", "genome.gff3")
 phenotypeFile  = args [1]
 genotypeFile   = args [2]
 genomeFile     = args [3]
@@ -33,7 +35,7 @@ createPhenotypeByYear <- function (phenotypeFile){
 		phenoByYearAll = phenotypeAll [phenotypeAll$Year==year,]
 		phenoByYear    = aggregate (phenoByYearAll$Score, list (phenoByYearAll$Genotype), mean)
 		phenoByYear    = aggregate (phenoByYearAll$Score, list (phenoByYearAll$Genotype), mean)
-		colnames (phenoByYear) = c ("Stub", "Score")
+		colnames (phenoByYear) = c ("Stub", "LBlight")
 
 		outfile = sprintf ("phenotype-Enciso-LBlight-%s.tbl", year)
 		write.table (phenoByYear, file=outfile, quote=F, row.names=F, sep=",")
@@ -55,7 +57,7 @@ extractGenomeAnnotations <- function (genomeFile) {
 		genomeAnn [i,] = c (name, chr, pos)
 	}
 	colnames (genomeAnn) = c("Marker", "Chrom", "Position")
-	write.table (file="genome-markers.tbl", genomeAnn, quote=F, sep="\t", row.names=F)
+	#write.table (file="genome-markers.tbl", genomeAnn, quote=F, sep="\t", row.names=F)
 	return (data.frame (genomeAnn, row.names=NULL))
 }
 
@@ -73,7 +75,7 @@ createGWASpolyGenotype <- function  (genotypeFile, genomeAnn) {
 	gdf = genotypeBySNPsDframe
 	genotypeChromPos = merge (genomeAnn, genotypeBySNPsDframe, by.x="Marker", by.y="Marker")
 	gc = genotypeChromPos
-	write.csv (file="genotype-chrom-pos.tbl", genotypeChromPos, quote=F, row.names=F)
+	write.csv (file="genotype-Enciso-gwaspoly.tbl", genotypeChromPos, quote=F, row.names=F)
 	return (genotypeChromPos)
 }
 
@@ -85,3 +87,5 @@ genomeAnn = extractGenomeAnnotations (genomeFile)
 
 msg ("Creating GWASpoly genotype...")
 genotype  = createGWASpolyGenotype (genotypeFile, genomeAnn)
+
+createPhenotypeByYear (phenotypeFile)

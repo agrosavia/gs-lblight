@@ -1,8 +1,10 @@
 #!/usr/bin/Rscript
+# r1.0: GWAS with phenotype and genotype but not with structure
 # r0.1: Functions + write to RData cache
 
 library (GWASpoly)
 args = commandArgs(trailingOnly = TRUE)
+print (args)
 setClass ("GWASpolyStruct", slots=c(params="list"), contains="GWASpoly.K")
 
 options (width=300)
@@ -10,7 +12,7 @@ options (width=300)
 #gwasModelsTypes = c("Naive", "Kinship", "Structure", "PCs", "Kinship+Structure", "Kinship+PCs", "Structure+PCs", "Kinship+Structure+PCs")
 #snpModels       = c("general","additive","1-dom", "2-dom")
 #snpModels       = c("general","additive","1-dom", "2-dom")
-#testModels      = c("additive","general","1-dom-alt","1-dom-ref","2-dom-alt","2-dom-ref")
+#testModels      = c("general", "additive","1-dom-alt","1-dom-ref","2-dom-alt","2-dom-ref")
 ##gwasModelsTypes = c("Kinship")
 ##snpModels       = c("general")
 ##testModels      = c("general")
@@ -18,10 +20,12 @@ options (width=300)
 ##multipleTestingModel = "permute"
 #gwasModelsTypes = c("Naive", "Kinship", "Structure", "PCs", "Kinship+Structure", "Kinship+PCs", "Structure+PCs", "Kinship+Structure+PCs")
 multipleTestingModel = "Bonferroni" 
-gwasModel            = "Naive"
-snpModels            = c("general")
-testModels           = c("general")
-testTraits           = c ("gota")
+gwasModel            = "Kinship"
+snpModels            = c("general","additive","1-dom", "2-dom")
+testModels           = c("general", "additive","1-dom-alt","1-dom-ref","2-dom-alt","2-dom-ref")
+#snpModels            = c("general")
+#testModels           = c("general")
+testTraits           = c ("LBlight")
 nTraits              = 1
 #-------------------------------------------------------------
 #args = c (phenotypeFile = "agrosavia-phenotype-gwaspoly.tbl", genotypeFile  = "agrosavia-genotype-gwaspoly-checked.tbl")
@@ -29,15 +33,14 @@ data = data2 = data3 = data4 = NULL
 phenotype = genotype = structure = NULL
 
 main <- function (args) {
-	args = c ("phenotype.tbl", "genotype.tbl")
+	#args = c ("phenotype.tbl", "genotype.tbl")
 
 	# Read and chheck matchs in files (samples, samples) and write new files
 	phenotypeFile   <- args [1]
 	genotypeFile    <- args [2]
 
 	# Load cache data
-	if (file.exists ("gwas.RData")) load (file="gwas.RData")
-	msg (ls())
+	#if (file.exists ("gwas.RData")) load (file="gwas.RData")
 
 	data = readData (phenotypeFile, genotypeFile)
 
@@ -56,22 +59,23 @@ main <- function (args) {
 	data4 <- runGwaspoly (data3, gwasModel, snpModels, testTraits, data4)
 
 	# Plot results
-	showResults (data4, testModels, testTraits, gwasModel)
+	showResults (data4, testModels, testTraits, gwasModel, phenotypeFile)
 
-	save(data, data1, data2, data3, data4, file="gwas.RData") 
+	#save(phenotype, genotype, data, data1, data2, data3, data4, file="gwas.RData") 
 }
 
 #-------------------------------------------------------------
 #-------------------------------------------------------------
 
 readData <- function (phenotypeFile, genotypeFile) {
+	msg();msg ("Reading data...")
+
 	if (!is.null (c(phenotype, genotype))) {
-		msg ("Loading phenotype and genotype"); 
+		msg (">>>> Loading phenotype and genotype"); 
 	}else{
-		msg ("Reading phenotype file...")
-		phenotype   = read.table (phenotypeFile, header=T, sep=",")
-		msg ("Reading genotype file...")
-		genotype    = read.table (genotypeFile, header=T, sep=",")
+		msg (">>>> Reading phenotype and genotype"); 
+		phenotype   <<- read.table (phenotypeFile, header=T, sep=",")
+		genotype    <<- read.table (genotypeFile, header=T, sep=",")
 	}
 
 	return (list (phenotype, genotype))
@@ -146,6 +150,7 @@ setKinship <- function (data1,  gwasModel, data2) {
 # Fix Populations structure and kinship
 #-------------------------------------------------------------
 setPopulationStructure <- function (data2, gwasModel, phenotype, structure, phenoStruct, data3) {
+	msg();msg ("Set population structure...")
 	#setClass ("GWASpolyStruct", slots=c(params="list"), contains="GWASpoly.K")
 	data3 = new ("GWASpolyStruct", data2)
 	
@@ -174,9 +179,10 @@ setPopulationStructure <- function (data2, gwasModel, phenotype, structure, phen
 # GWAS execution
 #-------------------------------------------------------------
 runGwaspoly <- function (data3, gwasModel, snpModels, testTraits, data4) {
-	if (!is.null (data4)) { msg ("Loading GWASpoly..."); return (data4) }
+	msg();msg("Running GWASpoly...")
+	if (!is.null (data4)) { msg (">>>> Loading GWASpoly..."); return (data4) }
 
-	msg ("Running ", gwasModel, "GWAS...")
+	msg (">>>> Running ", gwasModel, "GWAS...")
 
 	#snpModels = c("general","additive","1-dom", "2-dom")
 	if (gwasModel %in% c("Naive","Kinship")) {
@@ -193,34 +199,44 @@ runGwaspoly <- function (data3, gwasModel, snpModels, testTraits, data4) {
 #-------------------------------------------------------------
 # Plot results
 #-------------------------------------------------------------
-showResults <- function (data4, testModels, testTraits, gwasModel) {
-	msg ("Plotting results...")
+showResults <- function (data4, testModels, testTraits, gwasModel, phenotypeFile) {
+	msg();msg ("Plotting results...")
+	phenoName = strsplit (phenotypeFile, split=".tbl")[[1]][1]
+	plotName = sprintf("plot-gwaspoly-qq-%s-%s.pdf", gwasModel, phenoName)
 
 	# QTL Detection
 	data5 = set.threshold (data4, method=multipleTestingModel,level=0.05,n.permute=100,n.core=3)
 	significativeQTLs = get.QTL (data5)
 
 	msg (">>>>", "Writing results...")
-	outFile = sprintf ("gwas-significative-QTLs-%s.tbl", gwasModel) 
+	outFile = sprintf ("gwas-significative-QTLs-%s-%s.tbl", gwasModel, phenoName) 
 	write.table (file=outFile, significativeQTLs, quote=F, sep="\t", row.names=F)
 
 	print (significativeQTLs)
 
 	# QQ-plot Output
-	  #par(mfrow=c(2,3)) #specifies a 2 x 3 panel
-	for (i in 1:length(testModels)) {
-		plotName = sprintf("plot-gwaspoly-qq-%s-%s.pdf", gwasModel, testModels[i] )
-		pdf (file=plotName, width=7,height=7)
-		par (cex=1.5)
-		qq.plot(data4,trait=testTraits [1], model=testModels[i])
-		dev.off()
 
-		plotName = sprintf("plot-gwaspoly-manhattan-%s-%s.pdf", gwasModel, testModels[i] )
-		pdf (file=plotName, width=7,height=7)
-		par (cex=1.5)
-		manhattan.plot (y.max=20,data5, trait=testTraits[1], model=testModels [i])
-		dev.off()
+	pdf (file=plotName, width=11, height=7)
+	#par(mfrow = c(2, 3),     # 2x2 layout
+	#	oma = c(2, 2, 0, 0), # two rows of text at the outer left and bottom margin
+	#	mar = c(1, 1, 0, 0), # space for one row of text at ticks and to separate plots
+	#	mgp = c(2, 1, 0),    # axis label at 2 rows distance, tick labels at 1 row
+	#	xpd = F)            # allow content to protrude into outer margin (and beyond)
+	
+	par(mfrow=c(2,6), mgp=c(2,0.7,0), oma=c(0,0,0,2), mar=c(0,4,1.5,0), xpd=F)
+	for (i in 1:length(testModels)) {
+		#par (cex.main=0.5, cex.lab=0.5, cex.axis=0.5, ann=T)
+		qq.plot(data4,trait=testTraits [1], model=testModels[i], cex=0.3)
 	}
+
+	# Manhattan plot Output
+	for (i in 1:length(testModels)) {
+		#par (cex=1.5)
+		manhattan.plot (y.max=20,data5, trait=testTraits[1], model=testModels [i])
+	}
+	plotTitle = sprintf ("%s with %s", gwasModel, phenoName)  
+	mtext(plotTitle, outer=T,  cex=1.5, line=-2)
+	dev.off()
 
 	# Manhattan plot Output
 	# pdf (file="plots-gwaspoly-manhattan.pdf")
@@ -237,7 +253,7 @@ showResults <- function (data4, testModels, testTraits, gwasModel) {
 # Read input genotype and genotype (format: "numeric", "AB", or "ACGT")
 #-------------------------------------------------------------
 initGWAS <- function (phenotypeFile, genotypeFile, nTraits, data1) {
-	msg ("Initializing GWAS...")
+	msg();msg ("Initializing GWAS...")
 	# When data is previously loaded
 	if (!is.null (data)) {msg(">>>> Loading GWAS data..."); return (data)}
 
@@ -262,6 +278,6 @@ msg <- function (...) {
 #-------------------------------------------------------------
 # Call main 
 #-------------------------------------------------------------
-main ()
+main (args)
 
 
