@@ -1,0 +1,33 @@
+Trait	Model	Threshold	Marker	Chrom	Position	Ref	Alt	Score	Effect	Annotation	Best.Arabidopsis.Hit...Locus
+LBlight	general	4.91	solcap_snp_c2_7529	2	41088098	0	1	5.56	NA	CER6	AT1G68530.1
+LBlight	general	4.91	solcap_snp_c2_7556	2	41356967	0	1	5.56	NA	Mannose-6-phosphate isomerase	AT1G67070.1
+LBlight	general	4.91	solcap_snp_c2_7560	2	41359045	0	1	5.56	NA	Mannose-6-phosphate isomerase	AT1G67070.1
+LBlight	general	4.91	solcap_snp_c2_23740	5	389266	0	1	5.03	NA	Mitochondrial processing peptidase	AT3G02090.1
+LBlight	general	4.91	solcap_snp_c1_1125	5	51698150	0	1	5.01	NA	Phenylalanine ammonia-lyase	AT3G53260.1
+LBlight	general	4.91	solcap_snp_c2_27764	9	61466189	0	1	11.01	NA	Sucrose synthase	AT5G49190.1
+LBlight	additive	4.91	solcap_snp_c2_27918	1	6587872	0	1	5.52	6.84	Sterol delta-7 reductase DWF5	AT1G50430.1
+LBlight	additive	4.91	solcap_snp_c2_7529	2	41088098	0	1	5.56	14.3	CER6	AT1G68530.1
+LBlight	additive	4.91	solcap_snp_c2_7556	2	41356967	0	1	5.56	-14.3	Mannose-6-phosphate isomerase	AT1G67070.1
+LBlight	additive	4.91	solcap_snp_c2_7560	2	41359045	0	1	5.56	14.3	Mannose-6-phosphate isomerase	AT1G67070.1
+LBlight	additive	4.91	solcap_snp_c2_23740	5	389266	0	1	5.73	-5.79	Mitochondrial processing peptidase	AT3G02090.1
+LBlight	additive	4.91	solcap_snp_c1_1125	5	51698150	0	1	6.09	8.79	Phenylalanine ammonia-lyase	AT3G53260.1
+LBlight	additive	4.91	solcap_snp_c2_51957	8	1767949	0	1	5.66	9.57	Gene of unknown function	No_Hit
+LBlight	additive	4.91	solcap_snp_c1_10590	9	60279259	0	1	4.91	-8.88	Gene of unknown function	No_Hit
+LBlight	additive	4.91	solcap_snp_c2_27764	9	61466189	0	1	11.01	16.45	Sucrose synthase	AT5G49190.1
+LBlight	1-dom-alt	4.66	solcap_snp_c2_27918	1	6587872	0	1	4.66	11.05	Sterol delta-7 reductase DWF5	AT1G50430.1
+LBlight	1-dom-alt	4.66	solcap_snp_c2_7529	2	41088098	0	1	5.56	14.3	CER6	AT1G68530.1
+LBlight	1-dom-alt	4.66	solcap_snp_c2_7560	2	41359045	0	1	5.56	14.3	Mannose-6-phosphate isomerase	AT1G67070.1
+LBlight	1-dom-alt	4.66	solcap_snp_c2_54598	5	13164523	0	1	4.77	-12.28	Leucine-rich repeat receptor kinase	AT1G67510.1
+LBlight	1-dom-alt	4.66	solcap_snp_c1_9786	8	1220894	0	1	4.66	11.59	Conserved gene of unknown function	AT2G35360.1
+LBlight	1-dom-alt	4.66	solcap_snp_c2_51957	8	1767949	0	1	5.45	12.5	Gene of unknown function	No_Hit
+LBlight	1-dom-alt	4.66	solcap_snp_c2_48042	9	59139277	0	1	5.78	-12.13	RabGAP/TBC domain-containing protein	AT4G13730.1
+LBlight	1-dom-ref	4.58	solcap_snp_c2_7556	2	41356967	0	1	5.56	-14.3	Mannose-6-phosphate isomerase	AT1G67070.1
+LBlight	1-dom-ref	4.58	solcap_snp_c2_32702	8	1367551	0	1	4.61	-11.46	Multidrug resistance-associated protein	AT1G30400.1
+LBlight	1-dom-ref	4.58	solcap_snp_c2_27764	9	61466189	0	1	11.01	16.45	Sucrose synthase	AT5G49190.1
+LBlight	2-dom-alt	4.75	solcap_snp_c2_4844	1	83060566	0	1	4.81	-11.37	L-galactose dehydrogenase	AT4G33670.1
+LBlight	2-dom-alt	4.75	solcap_snp_c1_12945	4	57899405	0	1	5.17	11.47	Glycosyltransferase, CAZy family GT8	AT2G20810.1
+LBlight	2-dom-alt	4.75	solcap_snp_c2_54725	5	14541535	0	1	4.92	-13.42	Conserved gene of unknown function	No_Hit
+LBlight	2-dom-alt	4.75	solcap_snp_c2_12746	8	7267927	0	1	5.56	12.63	Protein IQ-DOMAIN 14	AT3G59690.1
+LBlight	2-dom-alt	4.75	solcap_snp_c2_47901	8	7838596	0	1	4.82	11.88	Beta-galactosidase	AT3G54440.1
+LBlight	2-dom-alt	4.75	solcap_snp_c1_14394	9	739893	0	1	4.78	16.78	Fructose-1,6-bisphosphatase	AT3G54050.1
+LBlight	2-dom-ref	4.73	solcap_snp_c2_23740	5	389266	0	1	6.82	-13.12	Mitochondrial processing peptidase	AT3G02090.1
