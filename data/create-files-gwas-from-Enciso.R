@@ -6,9 +6,9 @@
 args = commandArgs(trailingOnly = TRUE)
 options (width=300)
 
-args = c ("phenotype-potato-Enciso-lateBlight.tbl", "genotype-potato-Enciso.tbl", "genome.gff3")
-phenotypeFile  = args [1]
-genotypeFile   = args [2]
+args = c ("genotype-enciso.tbl", "phenotype-enciso.tbl", "genome.gff3")
+genotypeFile   = args [1]
+phenotypeFile  = args [2]
 genomeFile     = args [3]
 
 #-------------------------------------------------------------
