@@ -1,0 +1,15 @@
+PLINK v1.90b6.12 64-bit (28 Oct 2019)
+Options in effect:
+  --file agrosavia-genotype-tetra-ACGT
+  --make-bed
+  --out agrosavia-genotype-tetra-ACGT-1
+
+Hostname: agro
+Working directory: /home/lg/agrosavia/projects/gwas-others/gwas-prepro
+Start time: Tue Dec 10 16:26:45 2019
+
+Random number seed: 1576013205
+7829 MB RAM detected; reserving 3914 MB for main workspace.
+Error: Failed to open agrosavia-genotype-tetra-ACGT.map.
+
+End time: Tue Dec 10 16:26:45 2019

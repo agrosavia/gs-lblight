@@ -7,7 +7,7 @@ library (parallel)
 #------------------------------------------------------------------------------
 ## Format gwaspoly phenotype to plink format
 #------------------------------------------------------------------------------
-gwaspToPlinkPhenotype <- function (gwaspPhenoFile) 
+gwaspPhenoToPlinkPheno <- function (gwaspPhenoFile) 
 {
 	message ("Creating plink phenotype...")
 	phenotype = read.csv (file=gwaspPhenoFile, header=T)
@@ -25,7 +25,7 @@ gwaspToPlinkPhenotype <- function (gwaspPhenoFile)
 #------------------------------------------------------------------------------
 ## Create plink MAP file from gwaspoly genotype 
 #------------------------------------------------------------------------------
-gwaspToPlinkMap <- function (gwaspGenoFile) 
+gwaspGenoToPlinkMap <- function (gwaspGenoFile) 
 {
 	message (">>> Creating plink MAP file...")
 	genotype    = read.csv (file=gwaspGenoFile, header=T,stringsAsFactors=F)
@@ -41,7 +41,7 @@ gwaspToPlinkMap <- function (gwaspGenoFile)
 #----------------------------------------------------------
 ## Create plink PED file from gwaspoly genotype 
 #----------------------------------------------------------
-gwaspToPlinkPed <- function (gwaspGenoFile) {
+gwaspGenoToPlinkPed <- function (gwaspGenoFile) {
 	message (">>> Creating plink PED file...")
 	genotype    = read.csv (file=gwaspGenoFile, header=T)
 	#namesGeno  = c("fid", "iid", "pid", "mid", "sex", "phe", rep ("X", ncol (talleles)))
@@ -58,7 +58,7 @@ gwaspToPlinkPed <- function (gwaspGenoFile) {
 	write.table (file =outFile, transposedAlleles, col.names=T, row.names=T, quote=F, sep="\t")
 
 	message (">>> Creating PED genotype...")
-	plinkAlleles   = formatToPlinkAlleles (transposedAlleles)
+	plinkAlleles   = gwaspAllelesToPlinkAlleles (transposedAlleles)
 
 	colnames (plinkAlleles) = markersIds
 	genoPED    = cbind (0, samplesIds, 0,0,0,-9, plinkAlleles)
@@ -71,7 +71,7 @@ gwaspToPlinkPed <- function (gwaspGenoFile) {
 #----------------------------------------------------------
 # Add tabs to alleels changign AG --> A	G
 #----------------------------------------------------------
-formatToPlinkAlleles <- function (transposedAlleles) {
+gwaspAllelesToPlinkAlleles <- function (transposedAlleles) {
 	#alleles  [is.na (alleles)] = "00"
 	message (">>> Formatting alleles to plink...")
 	ncols = ncol (transposedAlleles)
@@ -91,8 +91,8 @@ gwaspGenoFile  = args [1]
 gwaspPhenoFile = args [2]
 
 message (">>> Converting gwaspoly to plink formats...")
-gwaspToPlinkPhenotype (gwaspPhenoFile)
-gwaspToPlinkMap (gwaspGenoFile)
-gwaspToPlinkPed (gwaspGenoFile)
+gwaspPhenoToPlinkPheno (gwaspPhenoFile)
+gwaspGenoToPlinkMap (gwaspGenoFile)
+gwaspGenoToPlinkPed (gwaspGenoFile)
 
 	
