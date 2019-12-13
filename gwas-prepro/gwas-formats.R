@@ -53,13 +53,13 @@ gwasp2tasselPhenotype<- function (gwaspPhenotypeFile, outFilename="") {
 gwaspGenoToPlinkMap <- function (gwaspGenoFile) 
 {
 	message (">>> Creating plink MAP file...")
-	genotype    <<- read.table (file=gwaspGenoFile, header=T,stringsAsFactors=T,sep=",")
-	markers     <<- as.character(genotype [,1])
-	chromosomes <<- genotype [,2]
-	positions   <<- genotype [,3]
+	genotype    <- read.table (file=gwaspGenoFile, header=T,stringsAsFactors=T,sep=",")
+	markers     <- as.character(genotype [,1])
+	chromosomes <- genotype [,2]
+	positions   <- genotype [,3]
 
-	plinkMap     <<- data.frame (chr=chromosomes, iid=markers, dist=0, positions=positions)
-	plinkMapSorted <<- plinkMap %>% arrange (chr, positions)
+	plinkMap     <- data.frame (chr=chromosomes, iid=markers, dist=0, positions=positions)
+	plinkMapSorted <- plinkMap %>% arrange (chr, positions)
 	outFile   = paste0 ("out/",strsplit (gwaspGenoFile, split="[.]")[[1]][1], "-plink.map")
 	msg()
 	msg (outFile)
@@ -141,34 +141,48 @@ gwaspTetraGenoToPlinkPed <- function (gwaspGenoFile, markersIdsMap)
 #----------------------------------------------------------
 # Add tabs to alleels changign AG --> A	G
 #----------------------------------------------------------
-tetraToDiplosAndTabbedAlleles <- function (alleles, refAltAlleles) {
-	#alleles = t (alleles)
-	msg ("Converting tetra to diplos...")
+tabAlleles <- function (alleles) {
+	msg ("Converting tetra to tabbed tetra")
 	matList <- apply (alleles, 2, list) # Lists by SNPs
 
-	t2d <- function (allele, ref, alt, snp) {
-		diplo=""
-		if (allele=="0000") diplo = "00"
-		else if (strrep (ref,4) == allele) diplo = paste0(ref,ref)
-		else if (strrep (alt,4) == allele) diplo =(paste0(alt,alt)
-		else diplo = paste0(ref,alt)
-		tabbed = stri_join (strsplit (allele,split="")[[1]], collapse=" ")
-		return (list (d=dipplo,t=tabbed))
+	doTabs <- function (allele) {
+		return (stri_join (strsplit (allele,split="")[[1]], collapse=" "))
 	}
-	ref <- refAltAlleles [1,]
-	alt <- refAltAlleles [2,]
 
-	diplosLst <<- list()
-	tabbedLst <<- list()
+	tabbedLst <- list()
 	for (ls in matList) {
-		diplosTabbedd   <- mcmapply (t2d,ls[[1]], ref, alt, rownames (alleles), mc.cores=4)
-		diplosLst <- append (diplosLst, diplos)
+		tabbed  <- mcmapply (doTabs,ls[[1]], mc.cores=4)
+		tabbedLst <- append (diplosLst, tabbed)
+	}
+	allelesTabbed <- matrix (unlist(tabbedLst), ncol=ncol(alleles), nrow=nrow(alleles), byrow=F)
+
+	return (allelesTabbed)
+}
+#----------------------------------------------------------
+#----------------------------------------------------------
+gwasp2shesisGenoPheno (phenotypeFile, genotypeFile) {
+	sep <- function (allele) {
+		s="";
+		for (i in 1:4) s=paste0(s, substr (allele,start=i,stop=i),"-");
+		return (s)
 	}
 
-	allelesDiplo <- matrix (unlist(diplosLst), ncol=ncol(alleles), nrow=nrow(alleles), byrow=F)
+	geno    = read.csv (file=genotypeFile, row.names=1)
+	pheno   = read.csv (file=phenotypeFile, row.names=1)
 
-	return (allelesDiplo)
+	markers = as.character (geno  [,1])
+	samples = as.character (pheno [,1])
+
+	alleles    <- geno[,-c(1,2,3)]
+	allelesSep <- sapply (as.character(alleles), sep)
+	allelesMat <- matrix (allelesSep, nrow=nrow(alleles), ncol=ncol(alleles), byrow=F)
+
+	genoPhenoShesis    = cbind (Sample=samples, Trait=pheno[,2],  t(allelesMat))
+
+	outFile = "out/filtered-shesis-genopheno.tbl"
+	write.table (file=outFile, quote=F,row.names=F,col.names=F, sep="\t")
 }
+
 
 
 #----------------------------------------------------------
@@ -189,7 +203,6 @@ tetraToDiplos <- function (alleles, refAltAlleles) {
 	alt <- refAltAlleles [2,]
 
 	diplosLst <<- list()
-	tabbedLst <<- list()
 	for (ls in matList) {
 		diplos    <- mcmapply (t2d,ls[[1]], ref, alt, rownames (alleles), mc.cores=4)
 		diplosLst <- append (diplosLst, diplos)
