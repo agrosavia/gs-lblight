@@ -6,9 +6,9 @@ Options in effect:
 
 Hostname: agro
 Working directory: /home/lg/agrosavia/projects/gwas-others/gwas-prepro
-Start time: Thu Dec 12 17:31:26 2019
+Start time: Fri Dec 13 09:21:59 2019
 
-Random number seed: 1576189886
+Random number seed: 1576246919
 7829 MB RAM detected; reserving 3914 MB for main workspace.
 2007 variants loaded from .bim file.
 597 people (0 males, 0 females, 597 ambiguous) loaded from .fam.
@@ -22,4 +22,4 @@ Note: No phenotypes present.
 --recode ped to out/agrosavia-genotype-tetra-ACGT-plink-6.ped +
 out/agrosavia-genotype-tetra-ACGT-plink-6.map ... done.
 
-End time: Thu Dec 12 17:31:26 2019
+End time: Fri Dec 13 09:22:00 2019

@@ -11,9 +11,9 @@ Options in effect:
 
 Hostname: agro
 Working directory: /home/lg/agrosavia/projects/gwas-others/gwas-prepro
-Start time: Thu Dec 12 17:31:43 2019
+Start time: Fri Dec 13 09:22:15 2019
 
-Random number seed: 1576189903
+Random number seed: 1576246935
 7829 MB RAM detected; reserving 3914 MB for main workspace.
 Scanning .ped file... done.
 Performing single-pass .bed write (2007 variants, 597 people).
@@ -40,4 +40,4 @@ Writing linear model association results to out/out-plink.TRAIT.assoc.linear
 --adjust values (2007 variants) written to
 out/out-plink.TRAIT.assoc.linear.adjusted .
 
-End time: Thu Dec 12 17:31:43 2019
+End time: Fri Dec 13 09:22:15 2019

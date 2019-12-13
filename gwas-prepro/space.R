@@ -1,6 +1,6 @@
 	sep <- function (allele) {
 		s="";
-		for (i in 1:4) s=paste0(s, substr (allele,start=i,stop=i),"");
+		for (i in 1:4) s=paste0(s, substr (allele,start=i,stop=i)," ");
 		return (s)
 	}
 

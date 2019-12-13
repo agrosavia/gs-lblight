@@ -1,1 +1,0 @@
-/home/lg/agrosavia/projects/gwas-gwaspoly/dev/gwas-polypipeline25.R

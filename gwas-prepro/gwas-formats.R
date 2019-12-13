@@ -160,34 +160,58 @@ tabAlleles <- function (alleles) {
 }
 #----------------------------------------------------------
 #----------------------------------------------------------
-gwasp2shesisGenoPheno (phenotypeFile, genotypeFile) {
+gwasp2shesisGenoPheno <- function (genotypeFile, phenotypeFile) {
 	sep <- function (allele) {
 		s="";
-		for (i in 1:4) s=paste0(s, substr (allele,start=i,stop=i),"-");
+		for (i in 1:4) s=paste0(s, substr (allele,start=i,stop=i)," ");
 		return (s)
 	}
 
-	geno    = read.csv (file=genotypeFile, row.names=1)
-	pheno   = read.csv (file=phenotypeFile, row.names=1)
-
-	markers = as.character (geno  [,1])
-	samples = as.character (pheno [,1])
+	geno    = read.csv (file=genotypeFile)
+	pheno   = read.csv (file=phenotypeFile)
+	rownames (pheno) <- pheno [,1]
+	rownames (geno)  <- geno [,1]
 
 	alleles    <- geno[,-c(1,2,3)]
-	allelesSep <- sapply (as.character(alleles), sep)
-	allelesMat <- matrix (allelesSep, nrow=nrow(alleles), ncol=ncol(alleles), byrow=F)
+	allelesMat <- t(sapply (alleles, sep))
 
-	genoPhenoShesis    = cbind (Sample=samples, Trait=pheno[,2],  t(allelesMat))
+	samples         = rownames (allelesMat)
+	markers         = colnames (allelesMat)
+	pheno           = pheno [samples,]
+	genoPhenoShesis = data.frame (Sample=pheno[,1], Trait=pheno[,2],  allelesMat)
 
 	outFile = "out/filtered-shesis-genopheno.tbl"
-	write.table (file=outFile, quote=F,row.names=F,col.names=F, sep="\t")
+	write.table (file=outFile, genoPhenoShesis, quote=F,row.names=F,col.names=F, sep="\t")
+
+	outFile = "out/filtered-shesis-markernames.tbl"
+	write.table (file=outFile, rownames(geno), quote=F,row.names=F,col.names=F, sep="\t")
 }
-
-
 
 #----------------------------------------------------------
 # Add tabs to alleels changign AG --> A	G
 #----------------------------------------------------------
+new_tetraToDiplos <- function (alleles, refAltAlleles) {
+	al <<- alleles
+	t2d <- function (allele, ref, alt, snp) {
+		if (allele=="0000") return ("00")
+		else if (strrep (ref,4) == allele) return (paste0(ref,ref))
+		else if (strrep (alt,4) == allele) return (paste0(alt,alt))
+		else return (paste0(ref,alt))
+	}
+
+	msg ("Converting tetra to diplos...")
+	matList <- apply (alleles, 2, list) # Lists by SNPs
+
+	ref <- refAltAlleles [1,]
+	alt <- refAltAlleles [2,]
+
+	allelesLst  <<- mapply (t2d, alleles, ref, alt, rownames (alleles))
+
+	allelesMat <<- matrix (unlist(allelesLst), ncol=ncol(alleles), nrow=nrow(alleles), byrow=F)
+
+	return (allelesMat)
+}
+
 tetraToDiplos <- function (alleles, refAltAlleles) {
 	#alleles = t (alleles)
 	msg ("Converting tetra to diplos...")
