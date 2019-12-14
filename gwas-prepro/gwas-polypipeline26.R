@@ -5,7 +5,7 @@
 # r2.1: Support for multiple command line arguments (dynamic)
 
 args = commandArgs(trailingOnly = TRUE)
-args = c("config-naive-4g.config")
+#args = c("config-naive-4g-PATB96.config")
 
 USAGE="USAGE: Rscript gwas-polypiline.R <config file>"
 if (length (args) != 1) {
@@ -149,6 +149,7 @@ dataPreprocessing <- function (genotypeFile, phenotypeFile, structureFile) {
 	# Convert and write plink pheno filtered
 	gwasp2plinkPhenotype  (outPhenoFile,"out/filtered-plink-phenotype.tbl") 
 	gwasp2tasselPhenotype (outPhenoFile,"out/filtered-tassel-phenotype.tbl") 
+	gwasp2shesisGenoPheno ("out/filtered-gwasp4-genotype.tbl", "out/filtered-gwasp4-phenotype.tbl") 
 
 	return (list (genotypeFile=outGenoFile, phenotypeFile=outPhenoFile,
 				  structureFile=structureFile, trait=trait))
