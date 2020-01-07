@@ -1,1 +1,0 @@
-/home/lg/agrosavia/projects/gwas-others/shesis/dev/run-shesis.sh
